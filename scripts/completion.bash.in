@@ -23,4 +23,5 @@ _cli11_complete()
     COMPREPLY=($(compgen -W "${words}" -- "${COMP_WORDS[${COMP_CWORD}]}"))
 }
 
-complete -F _cli11_complete -o bashdefault -o default @CLI11_EXE_NAME@
+# complete -F _cli11_complete -o bashdefault -o default @CLI11_EXE_NAME@
+complete -F _cli11_complete @CLI11_EXE_NAME@
