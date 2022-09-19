@@ -23,11 +23,17 @@ int main(int argc, char **argv) {
     app.formatter(fmt);
 
     app.add_flag("--flag", "This is a flag");
-
+    
     auto sub1 = app.add_subcommand("one", "Description One");
     sub1->add_flag("--oneflag", "Some flag");
     auto sub2 = app.add_subcommand("two", "Description Two");
     sub2->add_flag("--twoflag", "Some other flag");
+
+    // add a bit more subcommands
+    auto sub11 = sub1->add_subcommand("three", "Description Three");
+    auto sub21 = sub2->add_subcommand("four", "Description Four");
+    sub11->add_flag("--threeflag", "Some flag");
+    sub21->add_flag("--fourflag", "Some flag");
 
     CLI11_PARSE(app, argc, argv);
 
