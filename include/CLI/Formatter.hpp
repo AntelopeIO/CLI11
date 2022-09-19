@@ -189,7 +189,9 @@ inline std::string Formatter::make_subcommands(const App *app, AppFormatMode mod
 
     // For each group, filter out and print subcommands
     for(const std::string &group : subcmd_groups_seen) {
-        out << "\n" << group << ":\n";
+        if (mode!=AppFormatMode::SubCompact) { // do not show "Subcommands" header for nested tems in compact mode
+            out << "\n" << group << ":\n";
+        }
         std::vector<const App *> subcommands_group = app->get_subcommands(
             [&group](const App *sub_app) { return detail::to_lower(sub_app->get_group()) == detail::to_lower(group); });
         for(const App *new_com : subcommands_group) {
