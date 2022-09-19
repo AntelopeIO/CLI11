@@ -208,8 +208,10 @@ inline std::string Formatter::make_subcommands(const App *app, AppFormatMode mod
                 break;
             case AppFormatMode::Normal:
             case AppFormatMode::Sub:
-            case AppFormatMode::SubCompact:
                 out << make_subcommand(new_com);
+                break;
+            case AppFormatMode::SubCompact:
+                out << make_expanded(new_com, mode);
                 break;
             }
         }
