@@ -52,7 +52,7 @@ inline std::string Formatter::make_groups(const App *app, AppFormatMode mode) co
                    && (mode != AppFormatMode::Sub                    // If mode is Sub, then
                        || (app->get_help_ptr() != opt                // Ignore help pointer
                            && app->get_help_all_ptr() != opt         // Ignore help all pointer
-                           && app->get_autocomplete_ptr() != opt)); // Ignore auto-complete pointer
+                           && app->get_autocomplete_ptr() != opt));  // Ignore auto-complete pointer
         });
         if(!group.empty() && !opts.empty()) {
             out << make_group(group, false, opts);
@@ -145,8 +145,8 @@ inline std::string Formatter::make_help(const App *app, std::string name, AppFor
 
     // This immediately forwards to the make_expanded method. This is done this way so that subcommands can
     // have overridden formatters
-    if(mode == AppFormatMode::Sub)
-        return make_expanded(app);
+    if(mode == AppFormatMode::Sub || mode == AppFormatMode::SubCompact)
+        return make_expanded(app, mode);
 
     std::stringstream out;
     if((app->get_name().empty()) && (app->get_parent() != nullptr)) {
@@ -189,17 +189,30 @@ inline std::string Formatter::make_subcommands(const App *app, AppFormatMode mod
 
     // For each group, filter out and print subcommands
     for(const std::string &group : subcmd_groups_seen) {
-        out << "\n" << group << ":\n";
+        if (mode!=AppFormatMode::SubCompact) { // do not show "Subcommands" header for nested tems in compact mode
+            out << "\n" << group << ":\n";
+        }
         std::vector<const App *> subcommands_group = app->get_subcommands(
             [&group](const App *sub_app) { return detail::to_lower(sub_app->get_group()) == detail::to_lower(group); });
         for(const App *new_com : subcommands_group) {
             if(new_com->get_name().empty())
                 continue;
-            if(mode != AppFormatMode::All) {
-                out << make_subcommand(new_com);
-            } else {
+            switch(mode) {
+            case AppFormatMode::All:
                 out << new_com->help(new_com->get_name(), AppFormatMode::Sub);
                 out << "\n";
+                break;
+            case AppFormatMode::AllCompact:
+                out << new_com->help(new_com->get_name(), AppFormatMode::SubCompact);
+                out << "\n";
+                break;
+            case AppFormatMode::Normal:
+            case AppFormatMode::Sub:
+                out << make_subcommand(new_com);
+                break;
+            case AppFormatMode::SubCompact:
+                out << make_expanded(new_com, mode);
+                break;
             }
         }
     }
@@ -213,20 +226,27 @@ inline std::string Formatter::make_subcommand(const App *sub) const {
     return out.str();
 }
 
-inline std::string Formatter::make_expanded(const App *sub) const {
+inline std::string Formatter::make_expanded(const App *sub, AppFormatMode mode) const {
     std::stringstream out;
-    out << sub->get_display_name(true) << "\n";
+    std::string tmp;
 
-    out << make_description(sub);
-    if(sub->get_name().empty() && !sub->get_aliases().empty()) {
-        detail::format_aliases(out, sub->get_aliases(), column_width_ + 2);
+    if(mode == AppFormatMode::SubCompact) {
+        detail::format_help(out, sub->get_display_name(true), sub->get_description(), column_width_);
+        out << make_subcommands(sub, mode);
+    } else {
+        out << sub->get_display_name(true) << "\n";
+
+        out << make_description(sub);
+        if(sub->get_name().empty() && !sub->get_aliases().empty()) {
+            detail::format_aliases(out, sub->get_aliases(), column_width_ + 2);
+        }
+        out << make_positionals(sub);
+        out << make_groups(sub, mode);
+        out << make_subcommands(sub, mode);
     }
-    out << make_positionals(sub);
-    out << make_groups(sub, AppFormatMode::Sub);
-    out << make_subcommands(sub, AppFormatMode::Sub);
 
     // Drop blank spaces
-    std::string tmp = detail::find_and_replace(out.str(), "\n\n", "\n");
+    tmp = detail::find_and_replace(out.str(), "\n\n", "\n");
     tmp = tmp.substr(0, tmp.size() - 1);  // Remove the final '\n'
 
     // Indent all but the first line (the name)

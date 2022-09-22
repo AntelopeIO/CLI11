@@ -29,6 +29,13 @@ int main(int argc, char **argv) {
     auto sub2 = app.add_subcommand("two", "Description Two");
     sub2->add_flag("--twoflag", "Some other flag");
 
+    // add a bit more subcommands
+    auto sub11 = sub1->add_subcommand("three", "Description Three");
+    auto sub21 = sub2->add_subcommand("four", "Description Four");
+    auto sub211 = sub21->add_subcommand("five", "Description Five");
+    sub11->add_flag("--threeflag", "Some flag");
+    sub21->add_flag("--fourflag", "Some flag");
+
     CLI11_PARSE(app, argc, argv);
 
     std::cout << "This app was meant to show off the formatter, run with -h" << std::endl;

@@ -30,6 +30,8 @@ enum class AppFormatMode {
     Normal,  ///< The normal, detailed help
     All,     ///< A fully expanded help
     Sub,     ///< Used when printed as part of expanded subcommand
+    AllCompact, ///< A compact version of fully expanded help
+    SubCompact, ///< Compact version of expanded subcommand
 };
 
 /// This is the minimum requirements to run a formatter.
@@ -139,7 +141,7 @@ class Formatter : public FormatterBase {
     virtual std::string make_subcommand(const App *sub) const;
 
     /// This prints out a subcommand in help-all
-    virtual std::string make_expanded(const App *sub) const;
+    virtual std::string make_expanded(const App *sub,  AppFormatMode mode = AppFormatMode::Sub) const;
 
     /// This prints out all the groups of options
     virtual std::string make_footer(const App *app) const;

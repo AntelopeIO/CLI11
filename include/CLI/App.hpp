@@ -1410,7 +1410,7 @@ class App {
         }
 
         if(e.get_name() == "CallForAllHelp") {
-            out << help("", AppFormatMode::All);
+            out << help("", AppFormatMode::AllCompact);
             return e.get_exit_code();
         }
 
