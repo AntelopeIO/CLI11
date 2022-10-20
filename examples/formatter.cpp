@@ -8,9 +8,9 @@
 #include <iostream>
 #include <memory>
 
-class MyFormatter : public CLI::Formatter {
+class MyFormatter : public CLI::LeapFormatter {
   public:
-    MyFormatter() : Formatter() {}
+    MyFormatter() : LeapFormatter() {}
     std::string make_option_opts(const CLI::Option *) const override { return " OPTION"; }
 };
 
@@ -31,6 +31,7 @@ int main(int argc, char **argv) {
 
     // add a bit more subcommands
     auto sub11 = sub1->add_subcommand("three", "Description Three");
+    auto sub12 = sub1->add_subcommand("six", "Description Six");
     auto sub21 = sub2->add_subcommand("four", "Description Four");
     auto sub211 = sub21->add_subcommand("five", "Description Five");
     sub11->add_flag("--threeflag", "Some flag");
