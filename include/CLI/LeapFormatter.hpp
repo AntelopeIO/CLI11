@@ -98,7 +98,7 @@ public:
                   out << tree_symbol << make_expanded(new_com, mode);
                   break;
                default:
-                  break;
+                  throw HorribleError("Internal error: unknown help type requested");
             }
          }
       }
