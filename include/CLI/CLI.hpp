@@ -34,3 +34,5 @@
 #include "Config.hpp"
 
 #include "Formatter.hpp"
+
+#include "LeapFormatter.hpp"
