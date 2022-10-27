@@ -13,7 +13,6 @@
 // [CLI11:public_includes:end]
 
 #include "App.hpp"
-#include "FormatterFwd.hpp"
 
 namespace CLI {
 // [CLI11:leap_formatter_hpp:verbatim]
@@ -25,7 +24,10 @@ class LeapFormatter : public Formatter {
    const char* tree_fork = u8"\u251C";
 
 public:
-   LeapFormatter() = default;
+   LeapFormatter() : Formatter() {
+      // this gives better, more compact display
+      column_width(25);
+   }
    LeapFormatter(const LeapFormatter&) = default;
    LeapFormatter(LeapFormatter&&) = default;
 
