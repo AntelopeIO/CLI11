@@ -66,4 +66,6 @@ namespace {namespace} {{
 
 {formatter_hpp}
 
+{leap_formatter_hpp}
+
 }} // namespace {namespace}
