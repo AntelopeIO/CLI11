@@ -17,6 +17,7 @@
 namespace CLI {
 // [CLI11:leap_formatter_hpp:verbatim]
 
+
 class LeapFormatter : public Formatter {
    // pseudographics - to draw subcommand tree
    const char* tree_line = u8"\u2502";
@@ -142,6 +143,68 @@ public:
 
       // Indent all but the first line (the name)
       return detail::find_and_replace(tmp, "\n", "\n" + subc_symbol + "  ") + "\n";
+   }
+
+   virtual std::string make_group(std::string group, bool is_positional, std::vector<const Option*> opts) const {
+      std::stringstream out;
+
+      out << "\n"
+          << group << ":\n";
+      for(const Option* opt: opts) {
+         out << make_option(opt, is_positional);
+      }
+
+      return out.str();
+   }
+
+   std::vector<const Option*> make_groups_ex(std::vector<const Option*> opts, const App* app, AppFormatMode mode, const std::string& group) const {
+      std::vector<const Option*> po = app->get_options([app, mode, &group](const Option* opt) {
+         return opt->get_group() == group                       // Must be in the right group
+                && opt->nonpositional()                         // Must not be a positional
+                && (mode != AppFormatMode::Sub                  // If mode is Sub, then
+                    || (app->get_help_ptr() != opt              // Ignore help pointer
+                        && app->get_help_all_ptr() != opt       // Ignore help all pointer
+                        && app->get_autocomplete_ptr() != opt));// Ignore auto-complete pointer
+      });
+
+      std::vector<const Option*> dest;
+      if(!po.empty()) {
+         std::set_union(opts.begin(), opts.end(),
+                        po.begin(), po.end(),
+                        std::back_inserter(dest),
+                        [](const Option*& a, const Option*& b) {
+                           return a->get_name() != b->get_name();
+                        });
+      }
+      return dest;
+   }
+
+   virtual std::string make_groups(const App* app, AppFormatMode mode) const {
+      std::stringstream out;
+      std::vector<std::string> groups = app->get_groups();
+
+      // Options
+      for(const std::string& group: groups) {
+         // pull opts for current group
+         std::vector<const Option*> opts;
+         opts = make_groups_ex(opts, app, mode, group);
+
+         // pull opts for parents with same group type if fallthrough in place
+         const App* parent = app->get_parent();
+         if(parent != nullptr && app->get_fallthrough()) {
+            opts = make_groups_ex(opts, parent, mode, group);
+         }
+
+         // convert to stream
+         if(!group.empty() && !opts.empty()) {
+            out << make_group(group, false, opts);
+
+            if(group != groups.back())
+               out << "\n";
+         }
+      }
+
+      return out.str();
    }
 };
 // [CLI11:leap_formatter_hpp:end]
