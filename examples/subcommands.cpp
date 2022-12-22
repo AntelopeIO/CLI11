@@ -13,6 +13,12 @@ int main(int argc, char **argv) {
     CLI::App app("K3Pi goofit fitter");
     app.set_help_all_flag("--help-all", "Expand all help");
     app.add_flag("--random", "Some random flag");
+    app.fallthrough(); // flags from app will fall through to subcommands
+
+    // use LeapFormatter
+    auto fmt = std::make_shared<CLI::LeapFormatter>();
+    app.formatter(fmt);
+
     CLI::App *start = app.add_subcommand("start", "A great subcommand");
     CLI::App *stop = app.add_subcommand("stop", "Do you really want to stop?");
     app.require_subcommand();  // 1 or more

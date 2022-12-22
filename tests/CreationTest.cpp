@@ -539,9 +539,9 @@ TEST_CASE_METHOD(TApp, "GetOptionList", "[creation]") {
     const CLI::App &const_app = app;  // const alias to force use of const-methods
     std::vector<const CLI::Option *> opt_list = const_app.get_options();
 
-    REQUIRE(static_cast<std::size_t>(3) == opt_list.size());
-    CHECK(flag == opt_list.at(1));
-    CHECK(opt == opt_list.at(2));
+    REQUIRE(static_cast<std::size_t>(4) == opt_list.size());
+    CHECK(flag == opt_list.at(2));
+    CHECK(opt == opt_list.at(3));
 
     std::vector<CLI::Option *> nonconst_opt_list = app.get_options();
     for(std::size_t i = 0; i < opt_list.size(); ++i) {

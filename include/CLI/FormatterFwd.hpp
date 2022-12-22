@@ -132,7 +132,7 @@ class Formatter : public FormatterBase {
     virtual std::string make_positionals(const App *app) const;
 
     /// This prints out all the groups of options
-    std::string make_groups(const App *app, AppFormatMode mode) const;
+    virtual std::string make_groups(const App *app, AppFormatMode mode) const;
 
     /// This prints out all the subcommands
     virtual std::string make_subcommands(const App *app, AppFormatMode mode) const;

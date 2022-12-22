@@ -63,7 +63,7 @@ TEST_CASE("Formatter: OptCustomize", "[formatter]") {
                   "Usage: [OPTIONS]\n\n"
                   "Options:\n"
                   "  -h,--help              Print this help message and exit\n"
-                  "  --opt INT (MUST HAVE)  Something\n\n");
+                  "  --opt INT (MUST HAVE)  Something\n\n\n");
 }
 
 TEST_CASE("Formatter: OptCustomizeSimple", "[formatter]") {
@@ -82,7 +82,7 @@ TEST_CASE("Formatter: OptCustomizeSimple", "[formatter]") {
                   "Usage: [OPTIONS]\n\n"
                   "Options:\n"
                   "  -h,--help              Print this help message and exit\n"
-                  "  --opt INT (MUST HAVE)  Something\n\n");
+                  "  --opt INT (MUST HAVE)  Something\n\n\n");
 }
 
 TEST_CASE("Formatter: OptCustomizeOptionText", "[formatter]") {
@@ -100,7 +100,7 @@ TEST_CASE("Formatter: OptCustomizeOptionText", "[formatter]") {
                   "Usage: [OPTIONS]\n\n"
                   "Options:\n"
                   "  -h,--help              Print this help message and exit\n"
-                  "  --opt (ARG)            Something\n\n");
+                  "  --opt (ARG)            Something\n\n\n");
 }
 
 TEST_CASE("Formatter: FalseFlagExample", "[formatter]") {
@@ -137,7 +137,7 @@ TEST_CASE("Formatter: AppCustomize", "[formatter]") {
     CHECK(help == "My prog\n"
                   "Run: [OPTIONS] [SUBCOMMAND]\n\n"
                   "Options:\n"
-                  "  -h,--help         Print this help message and exit\n\n"
+                  "  -h,--help         Print this help message and exit\n\n\n"
                   "Subcommands:\n"
                   "  subcom1           This\n"
                   "  subcom2           This\n\n");
@@ -156,7 +156,7 @@ TEST_CASE("Formatter: AppCustomizeSimple", "[formatter]") {
     CHECK(help == "My prog\n"
                   "Run: [OPTIONS] [SUBCOMMAND]\n\n"
                   "Options:\n"
-                  "  -h,--help         Print this help message and exit\n\n"
+                  "  -h,--help         Print this help message and exit\n\n\n"
                   "Subcommands:\n"
                   "  subcom1           This\n"
                   "  subcom2           This\n\n");

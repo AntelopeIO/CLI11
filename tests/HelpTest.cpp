@@ -795,25 +795,23 @@ TEST_CASE_METHOD(CapturedHelp, "CallForAllHelpOutput", "[help]") {
     sub->add_flag("--three");
 
     CHECK(0 == run(CLI::CallForAllHelp()));
-    CHECK(app.help("", CLI::AppFormatMode::All) == out.str());
+    // default for --help-all is set now to better AllCompact
+    CHECK(app.help("", CLI::AppFormatMode::AllCompact) == out.str());
     CHECK("" == err.str());
     CHECK_THAT(out.str(), Contains("one"));
     CHECK_THAT(out.str(), Contains("two"));
-    CHECK_THAT(out.str(), Contains("--three"));
-
+    // in compact mode there should not be flags from subcommands displayed
+    CHECK_THAT(out.str(), !Contains("--three"));
     CHECK(out.str() == "My Test Program\n"
                        "Usage: [OPTIONS] [SUBCOMMAND]\n"
                        "\n"
                        "Options:\n"
                        "  -h,--help                   Print this help message and exit\n"
                        "  --help-all                  Help all\n"
-                       "\n"
+                       "\n\n"
                        "Subcommands:\n"
-                       "one\n"
-                       "  One description\n\n"
-                       "two\n"
-                       "  Options:\n"
-                       "    --three                     \n\n\n");
+                       "  one                         One description\n\n"
+                       "  two                         \n\n\n");
 }
 TEST_CASE_METHOD(CapturedHelp, "NewFormattedHelp", "[help]") {
     app.formatter_fn([](const CLI::App *, std::string, CLI::AppFormatMode) { return "New Help"; });
