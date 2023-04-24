@@ -20,9 +20,9 @@ namespace CLI {
 
 class LeapFormatter : public Formatter {
    // pseudographics - to draw subcommand tree
-   const char* tree_line = u8"\u2502";
-   const char* tree_angle = u8"\u2514";
-   const char* tree_fork = u8"\u251C";
+   const char* tree_line = reinterpret_cast<const char *>(u8"\u2502");
+   const char* tree_angle = reinterpret_cast<const char *>(u8"\u2514");
+   const char* tree_fork = reinterpret_cast<const char *>(u8"\u251C");
 
 public:
    LeapFormatter() : Formatter() {
