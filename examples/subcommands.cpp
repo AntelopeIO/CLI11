@@ -15,8 +15,8 @@ int main(int argc, char **argv) {
     app.add_flag("--random", "Some random flag");
     app.fallthrough(); // flags from app will fall through to subcommands
 
-    // use LeapFormatter
-    auto fmt = std::make_shared<CLI::LeapFormatter>();
+    // use SpringFormatter
+    auto fmt = std::make_shared<CLI::SpringFormatter>();
     app.formatter(fmt);
 
     CLI::App *start = app.add_subcommand("start", "A great subcommand");
