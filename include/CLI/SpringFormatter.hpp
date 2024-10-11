@@ -15,22 +15,22 @@
 #include "App.hpp"
 
 namespace CLI {
-// [CLI11:leap_formatter_hpp:verbatim]
+// [CLI11:spring_formatter_hpp:verbatim]
 
 
-class LeapFormatter : public Formatter {
+class SpringFormatter : public Formatter {
    // pseudographics - to draw subcommand tree
    const char* tree_line = reinterpret_cast<const char *>(u8"\u2502");
    const char* tree_angle = reinterpret_cast<const char *>(u8"\u2514");
    const char* tree_fork = reinterpret_cast<const char *>(u8"\u251C");
 
 public:
-   LeapFormatter() : Formatter() {
+   SpringFormatter() : Formatter() {
       // this gives better, more compact display
       column_width(25);
    }
-   LeapFormatter(const LeapFormatter&) = default;
-   LeapFormatter(LeapFormatter&&) = default;
+   SpringFormatter(const SpringFormatter&) = default;
+   SpringFormatter(SpringFormatter&&) = default;
 
    /// This prints out all the subcommands
    virtual std::string make_subcommands(const App* app, AppFormatMode mode) const {
@@ -207,5 +207,5 @@ public:
       return out.str();
    }
 };
-// [CLI11:leap_formatter_hpp:end]
+// [CLI11:spring_formatter_hpp:end]
 }// namespace CLI

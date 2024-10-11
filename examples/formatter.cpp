@@ -8,9 +8,9 @@
 #include <iostream>
 #include <memory>
 
-class MyFormatter : public CLI::LeapFormatter {
+class MyFormatter : public CLI::SpringFormatter {
   public:
-    MyFormatter() : LeapFormatter() {}
+    MyFormatter() : SpringFormatter() {}
     std::string make_option_opts(const CLI::Option *) const override { return " OPTION"; }
 };
 
