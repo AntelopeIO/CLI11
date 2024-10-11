@@ -13,14 +13,14 @@ jobs:
     container: nvidia/cuda:12.6.1-runtime-ubuntu22.04
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: true
     - name: Add wget
       run: apt-get update && apt-get install -y wget
     - name: Get cmake
       uses: jwlawson/actions-setup-cmake@v1.14
     - name: Configure
       run: cmake -S . -B build -DCLI11_CUDA_TESTS=ON
+    - name: Checkout submodules
+      run: git submodule update --init --recursive
     - name: Build
       run: cmake --build build -j2
 
@@ -31,12 +31,12 @@ jobs:
     container: zouzias/boost:1.76.0
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: true
     - name: Add deps
       run: apt-get update && apt-get install make
     - name: Get CMake
       uses: jwlawson/actions-setup-cmake@v1.14
+    - name: Checkout submodules
+      run: git submodule update --init --recursive
     - name: Configure
       run: cmake -S . -B build -DCLI11_BOOST=ON
     - name: Build
