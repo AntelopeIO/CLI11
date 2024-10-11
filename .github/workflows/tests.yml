@@ -10,40 +10,36 @@ jobs:
   cuda-build:
     name: CUDA build only
     runs-on: ubuntu-latest
-    container: nvidia/cuda:12.6.1-runtime-ubuntu22.04
+    container: nvidia/cuda:12.3.1-devel-ubuntu22.04
     steps:
-    - uses: actions/checkout@v3
-    - name: Add wget
-      run: apt-get update && apt-get install -y wget make
-    - name: Get cmake
-      uses: jwlawson/actions-setup-cmake@v1.14
-    - name: Configure
-      run: cmake -S . -B build -DCLI11_CUDA_TESTS=ON
-    - name: Checkout submodules
-      run: git submodule update --init --recursive
-    - name: Build
-      run: cmake --build build -j2
-
+      - name: Add build tools
+        run: apt-get update && apt-get install -y wget git cmake
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Configure
+        run: cmake -S . -B build -DCLI11_CUDA_TESTS=ON
+      - name: Build
+        run: cmake --build build -j2
 
   boost-build:
     name: Boost build
-    runs-on: ubuntu-latest
-    container: zouzias/boost:1.83.0
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
-    - name: Add deps
-      run: apt-get update && apt-get install make
-    - name: Get CMake
-      uses: jwlawson/actions-setup-cmake@v1.14
-    - name: Checkout submodules
-      run: git submodule update --init --recursive
-    - name: Configure
-      run: cmake -S . -B build -DCLI11_BOOST=ON
-    - name: Build
-      run: cmake --build build -j2
-    - name: Run tests
-      run: ctest --output-on-failure
-      working-directory: build
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Add boost
+        run: sudo apt-get update && sudo apt-get install -y libboost-dev
+      # NOTE: If a boost version matching all requirements cannot be found,
+      # this build step will fail
+      - name: Configure
+        run: cmake -S . -B build -DCLI11_BOOST=ON
+      - name: Build
+        run: cmake --build build -j2
+      - name: Run tests
+        run: ctest --output-on-failure
+        working-directory: build
 
   meson-build:
     name: Meson build
@@ -63,52 +59,94 @@ jobs:
       run: meson compile -C build-meson
 
 
-  cmake-config:
-    name: CMake config check
-    runs-on: ubuntu-latest
+  cmake-config-ubuntu-2004:
+    name: CMake config check (Ubuntu 20.04)
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - name: Check CMake 3.16
-      uses: ./.github/actions/quick_cmake
-      with:
-        cmake-version: "3.16"
-      if: success() || failure()
+      - name: Check CMake 3.16
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.16"
+        if: success() || failure()
 
-    - name: Check CMake 3.17
-      uses: ./.github/actions/quick_cmake
-      with:
-        cmake-version: "3.17"
-      if: success() || failure()
+  cmake-config-ubuntu-2204:
+    name: CMake config check (Ubuntu 22.04)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Check CMake 3.18
-      uses: ./.github/actions/quick_cmake
-      with:
-        cmake-version: "3.18"
-      if: success() || failure()
+      - name: Check CMake 3.17
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.17"
+        if: success() || failure()
 
-    - name: Check CMake 3.19
-      uses: ./.github/actions/quick_cmake
-      with:
-        cmake-version: "3.19"
-      if: success() || failure()
+      - name: Check CMake 3.18
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.18"
+        if: success() || failure()
 
-    - name: Check CMake 3.20
-      uses: ./.github/actions/quick_cmake
-      with:
-        cmake-version: "3.20"
-      if: success() || failure()
+      - name: Check CMake 3.19
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.19"
+        if: success() || failure()
 
-    - name: Check CMake 3.21 (full)
-      uses: ./.github/actions/quick_cmake
-      with:
-        cmake-version: "3.21"
-        args: -DCLI11_SANITIZERS=ON -DCLI11_BUILD_EXAMPLES_JSON=ON
-      if: success() || failure()
+      - name: Check CMake 3.20
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.20"
+        if: success() || failure()
 
-    - name: Check CMake 3.22 (full)
-      uses: ./.github/actions/quick_cmake
-      with:
-        cmake-version: "3.22"
-        args: -DCLI11_SANITIZERS=ON -DCLI11_BUILD_EXAMPLES_JSON=ON
-      if: success() || failure()
+      - name: Check CMake 3.21
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.21"
+        if: success() || failure()
+
+      - name: Check CMake 3.22
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.22"
+        if: success() || failure()
+
+      - name: Check CMake 3.23
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.23"
+        if: success() || failure()
+
+      - name: Check CMake 3.24
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.24"
+        if: success() || failure()
+
+      - name: Check CMake 3.25
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.25"
+        if: success() || failure()
+
+      - name: Check CMake 3.26 (full)
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.26"
+          args: -DCLI11_SANITIZERS=ON -DCLI11_BUILD_EXAMPLES_JSON=ON
+        if: success() || failure()
+
+      - name: Check CMake 3.27
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.27"
+        if: success() || failure()
+
+      - name: Check CMake 3.28 (full)
+        uses: ./.github/actions/quick_cmake
+        with:
+          cmake-version: "3.28.X"
+          args: -DCLI11_SANITIZERS=ON -DCLI11_BUILD_EXAMPLES_JSON=ON
+        if: success() || failure()
