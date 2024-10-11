@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Add wget
-      run: apt-get update && apt-get install -y wget
+      run: apt-get update && apt-get install -y wget make
     - name: Get cmake
       uses: jwlawson/actions-setup-cmake@v1.14
     - name: Configure
@@ -28,7 +28,7 @@ jobs:
   boost-build:
     name: Boost build
     runs-on: ubuntu-latest
-    container: zouzias/boost:1.76.0
+    container: zouzias/boost:1.83.0
     steps:
     - uses: actions/checkout@v3
     - name: Add deps
